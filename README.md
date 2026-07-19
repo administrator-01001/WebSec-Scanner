@@ -17,20 +17,25 @@
 
 ### Detection Modules (22+ plugins)
 
-**Recon (8 modules)**
+**Recon (9 modules)**
 - WHOIS lookup, DNS Enumeration (A, MX, NS, TXT, SOA, PTR, CNAME)
 - Subdomain Discovery (50+ common subdomains)
 - Port Scan (25 common ports)
 - HTTP Security Headers analysis
 - SSL/TLS certificate check (expiry, version, cipher)
+- Certificate Transparency (crt.sh subdomain enumeration)
 - WAF Detection (Cloudflare, CloudFront, Akamai, F5, ModSecurity, Sucuri, ...)
 - Technology Detection (WordPress, Laravel, Django, React, Vue, Nginx, Apache, ...)
 
-**Vulnerability (14 modules)**
+**Vulnerability (18 modules)**
 - SQL Injection (error-based, boolean-based, time-based)
 - Cross-Site Scripting (reflected, DOM-based)
 - CSRF Token Analysis & SameSite check
 - Server-Side Request Forgery (SSRF)
+- **XML External Entity (XXE) Injection**
+- **Host Header Injection** (cache poisoning, password reset poisoning)
+- **GraphQL Security Check** (introspection, schema exposure)
+- **NoSQL Injection** (MongoDB $ne/$regex/$gt payloads)
 - Local/Remote File Inclusion (LFI/RFI)
 - Command Injection
 - Server-Side Template Injection (SSTI)
@@ -43,7 +48,7 @@
 - **Config Flaw Checker with CWE mapping**
 
 **CVE Scanner**
-- Known Vulnerabilities Database (200+ CVE entries for 18+ technologies)
+- Known Vulnerabilities Database (137+ CVE entries for 30+ technologies)
 - NVD API Integration
 - Exploit-DB Search
 - Version-aware CVE matching
@@ -118,15 +123,17 @@ webscanner/
   │   ├── target.py           # ScanTarget dataclass
   │   └── result.py           # Finding + ScanResult dataclasses
 ├── modules/
-│   ├── recon/              # 8 recon modules
+│   ├── recon/              # 9 recon modules
 │   │   ├── whois.py, dns_enum.py, subdomain.py, port_scan.py
 │   │   ├── http_header.py, ssl_tls.py, waf_detect.py, tech_detect.py
-│   ├── vulnerability/      # 14 vuln modules
+│   │   ├── cert_transparency.py
+│   ├── vulnerability/      # 18 vuln modules
 │   │   ├── sqli.py, xss.py, csrf.py, ssrf.py, lfi_rfi.py
 │   │   ├── command_injection.py, ssti.py, open_redirect.py
 │   │   ├── idor.py, cors.py, security_headers.py, cookie_security.py
 │   │   ├── tech_vuln_scanner.py, config_checks.py
-│   │   └── known_vulns.py         # 200+ CVE database
+│   │   ├── xxe.py, host_header_injection.py, graphql_check.py, nosqli.py
+│   │   └── known_vulns.py         # 137+ CVE entries for 30 techs
 │   ├── cve/                # CVE scanner
 │   │   ├── nvd.py, exploit_db.py
 │   └── crawl/              # Crawl engine
@@ -226,15 +233,21 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
 
 | Technology | Entries | Technology | Entries |
 |------------|---------|------------|---------|
-| WordPress | 10 | Drupal | 4 |
-| Laravel | 10 | Magento | 3 |
-| Python | 10 | ASP.NET | 3 |
-| PHP | 9 | Django | 5 |
-| Nginx | 8 | Flask | 4 |
-| Apache | 7 | Express | 4 |
-| MySQL | 4 | Spring | 4 |
-| PostgreSQL | 4 | Symfony | 3 |
-| Redis | 4 | jQuery | 6 |
+| WordPress | 10 | Django | 5 |
+| Laravel | 10 | Flask | 4 |
+| Python | 10 | Express | 4 |
+| PHP | 9 | Spring | 4 |
+| Nginx | 8 | Symfony | 3 |
+| Apache | 7 | ASP.NET | 3 |
+| MySQL | 4 | jQuery | 6 |
+| PostgreSQL | 4 | **Tomcat** | **4** |
+| Redis | 4 | **Jenkins** | **4** |
+| Drupal | 4 | **Kubernetes** | **4** |
+| Magento | 3 | **Docker** | **4** |
+| **MongoDB** | **4** | **Grafana** | **3** |
+| **GitLab** | **3** | **Next.js** | **3** |
+| **RabbitMQ** | **2** | **Elasticsearch** | **2** |
+| **Vue** | **2** | **React** | **1** |
 
 ---
 
