@@ -1,6 +1,6 @@
 # WebSec Scanner 🔍
 
-**Web Vulnerability Scanner & Security Analyzer** — Công cụ quét lỗ hổng bảo mật website toàn diện với nhiều chế độ, phát hiện CVE/CWE cụ thể, và xuất báo cáo chuyên nghiệp.
+**Web Vulnerability Scanner & Security Analyzer** — A comprehensive web security scanning tool with multiple scan modes, specific CVE/CWE detection, and professional report generation.
 
 ```
 +--------------------------------------------------------------+
@@ -11,20 +11,20 @@
 
 ---
 
-## Tính năng chính
+## Features
 
-### 🚀 4 chế độ quét
+### 🚀 4 Scan Modes
 
-| Chế độ | Mô tả | Tốc độ |
-|--------|-------|--------|
-| **Quick** | Thu thập thông tin cơ bản: HTTP header, SSL/TLS, phát hiện công nghệ | ~2-5s |
-| **Standard** | Thêm OWASP Top 10, CVE theo tech stack, kiểm tra cấu hình bảo mật | ~5-15s |
-| **Deep** | Crawl toàn bộ website, fuzz endpoint, phát hiện API, CVE từ NVD | ~30-120s |
-| **Enterprise** | Full module, đa luồng (20 threads), báo cáo chi tiết | ~60-180s |
+| Mode | Description | Speed |
+|------|-------------|-------|
+| **Quick** | Basic info gathering: HTTP headers, SSL/TLS, tech detection | ~2-5s |
+| **Standard** | OWASP Top 10, tech-specific CVEs, security config checks | ~5-15s |
+| **Deep** | Full crawl, endpoint fuzzing, API discovery, NVD CVE lookup | ~30-120s |
+| **Enterprise** | All modules, multi-threaded (20 threads), detailed reporting | ~60-180s |
 
-### 📦 Module phát hiện (22+ plugins)
+### 📦 Detection Modules (22+ plugins)
 
-**Recon (8 module)**
+**Recon (8 modules)**
 - WHOIS lookup, DNS Enumeration (A, MX, NS, TXT, SOA, PTR, CNAME)
 - Subdomain Discovery (50+ common subdomains)
 - Port Scan (25 common ports)
@@ -33,7 +33,7 @@
 - WAF Detection (Cloudflare, CloudFront, Akamai, F5, ModSecurity, Sucuri, ...)
 - Technology Detection (WordPress, Laravel, Django, React, Vue, Nginx, Apache, ...)
 
-**Vulnerability (14 module)**
+**Vulnerability (14 modules)**
 - SQL Injection (error-based, boolean-based, time-based)
 - Cross-Site Scripting (reflected, DOM-based)
 - CSRF Token Analysis & SameSite check
@@ -50,7 +50,7 @@
 - **Config Flaw Checker with CWE mapping**
 
 **CVE Scanner**
-- Known Vulnerabilities Database (200+ CVE entries cho 18+ công nghệ)
+- Known Vulnerabilities Database (200+ CVE entries for 18+ technologies)
 - NVD API Integration
 - Exploit-DB Search
 - Version-aware CVE matching
@@ -61,9 +61,9 @@
 - Hidden Endpoint Detection
 - HTTP Method Discovery (GET, POST, PUT, DELETE, OPTIONS)
 
-### 🏷️ Phát hiện CVE/CWE cụ thể
+### 🏷️ Specific CVE/CWE Detection
 
-Khi phát hiện công nghệ, tool tự động tra cứu CVE tương ứng:
+When a technology is detected, the tool automatically cross-references known CVEs:
 
 ```
 [Python] CVE-2024-9287 - Heap Overflow in SSL/TLS (Critical, 9.8)
@@ -72,7 +72,7 @@ Khi phát hiện công nghệ, tool tự động tra cứu CVE tương ứng:
 [WordPress] CVE-2025-2731 - RCE via XML-RPC (Critical, 9.8)
 ```
 
-Kèm CWE mapping cho từng loại lỗ hổng:
+Each vulnerability type is mapped to its CWE identifier:
 ```
 SQLi       → CWE-89
 XSS        → CWE-79
@@ -86,75 +86,84 @@ IDOR       → CWE-639
 CORS       → CWE-942
 ```
 
-### 📊 Hệ thống chấm điểm
+### 📊 Scoring System
 
-| Điểm | Mức | Ý nghĩa |
-|------|-----|---------|
-| 90–100 | 🟢 Very Safe | Rất an toàn |
-| 75–89 | 🟡 Safe | Tốt |
-| 50–74 | 🟠 Needs Improvement | Cần cải thiện |
-| 25–49 | 🔴 Risky | Nhiều rủi ro |
-| 0–24 | ⚫ Critical Danger | Nguy cơ rất cao |
+| Score | Level | Meaning |
+|-------|-------|---------|
+| 90–100 | 🟢 Very Safe | Excellent security posture |
+| 75–89 | 🟡 Safe | Good, minor improvements needed |
+| 50–74 | 🟠 Needs Improvement | Several issues found |
+| 25–49 | 🔴 Risky | High risk, action required |
+| 0–24 | ⚫ Critical Danger | Immediate action needed |
 
-### 📄 Báo cáo đa định dạng
+### 📄 Multi-Format Reports
 
-- **HTML** — Giao diện dark mode, hiển thị score + findings theo severity
-- **JSON** — Machine-readable, đầy đủ metadata
-- **CSV** — Excel-friendly, dễ filter/phân tích
+- **HTML** — Dark mode UI with score visualization and severity-grouped findings
+- **JSON** — Machine-readable with full metadata
+- **CSV** — Excel-friendly for filtering and analysis
 
-### 🔌 Kiến trúc Plugin
+### 🔌 Plugin Architecture
 
-Cho phép bổ sung module mới mà không cần sửa core:
+Add new modules without modifying the core:
 
 ```python
 @plugin("module_name", "Description", "vuln")
 class MyPlugin(VulnPlugin):
     async def run(self, target, http_client) -> list[Finding]:
-        # logic here
+        # your logic here
         pass
 ```
 
+### ✅ Safe Verification
+
+The tool uses **non-intrusive** detection techniques:
+- Error-based detection (analyzing response patterns)
+- Boolean-based detection (comparing response lengths)
+- Time-based detection (measuring response delays)
+- No automated data extraction
+- No destructive payloads
+
 ---
 
-## Cài đặt
+## Installation
 
-### Yêu cầu
+### Requirements
 
 - Python 3.10+
 - pip
 
-### Cài đặt
+### Setup
 
 ```bash
-# Clone hoặc copy source
+# Clone or copy the source
 cd webscanner
 
-# Cài dependencies
+# Install dependencies
 pip install httpx
 
-# (Optional) Cài whois nếu muốn dùng WHOIS module
-# Windows: không cần (dùng whois từ WSL hoặc bỏ qua)
+# (Optional) Install whois for WHOIS lookups
 # Linux: sudo apt install whois
 # macOS: brew install whois
+# Windows: skip (or use WSL)
 ```
 
-### Cấu trúc thư mục
+### Project Structure
 
 ```
 webscanner/
 ├── main.py                 # CLI entry point (argparse)
-├── config.py               # Cấu hình scan modes
+├── config.py               # Scan mode configuration
 ├── core/
 │   ├── scanner.py          # Scanner engine
 │   └── plugin_system.py    # Plugin registry + auto-discovery
 ├── models/
 │   ├── target.py           # ScanTarget dataclass
-│   └── result.py           # Finding + ScanResult (tính điểm)
+│   └── result.py           # Finding + ScanResult (auto-scoring)
 ├── modules/
-│   ├── recon/              # 8 module recon
+│   ├── recon/              # 8 recon modules
 │   │   ├── whois.py, dns_enum.py, subdomain.py, port_scan.py
 │   │   ├── http_header.py, ssl_tls.py, waf_detect.py, tech_detect.py
-│   ├── vulnerability/      # 14 module vuln
+│   ├── vulnerability/      # 14 vuln modules
 │   │   ├── sqli.py, xss.py, csrf.py, ssrf.py, lfi_rfi.py
 │   │   ├── command_injection.py, ssti.py, open_redirect.py
 │   │   ├── idor.py, cors.py, security_headers.py, cookie_security.py
@@ -170,7 +179,7 @@ webscanner/
 ├── utils/                  # Utilities
 │   ├── http_client.py, scoring.py, helpers.py
 ├── samples/
-│   └── vulnerable_app.py   # Test app (Flask)
+│   └── vulnerable_app.py   # Test Flask app
 ├── requirements.txt
 ├── setup.py
 └── pyproject.toml
@@ -178,7 +187,7 @@ webscanner/
 
 ---
 
-## Sử dụng
+## Usage
 
 ### Quick Start
 
@@ -189,13 +198,13 @@ $env:PYTHONPATH = "C:\Users\HANH"
 # Quick scan
 python -m webscanner example.com -m quick
 
-# Standard scan với tất cả báo cáo
+# Standard scan with all reports
 python -m webscanner https://example.com -m standard -r all
 
 # Deep scan
 python -m webscanner https://example.com -m deep --crawl-depth 3
 
-# Enterprise scan với proxy
+# Enterprise scan with proxy
 python -m webscanner https://example.com -m enterprise --threads 30 --proxy http://127.0.0.1:8080
 ```
 
@@ -206,56 +215,56 @@ positional arguments:
   target                Target URL or domain to scan
 
 options:
-  -h, --help            Hiển thị help
+  -h, --help            Show help message
   -m, --mode {quick,standard,deep,enterprise}
-                        Chế độ quét (default: quick)
+                        Scan mode (default: quick)
   -t, --threads THREADS
-                        Số luồng (0 = mặc định theo mode)
+                        Number of threads (0 = mode default)
   -p, --proxy PROXY     Proxy server (e.g., http://127.0.0.1:8080)
   -r, --report {html,json,csv,all}
-                        Định dạng báo cáo (default: html)
+                        Report format (default: html)
   --crawl-depth CRAWL_DEPTH
-                        Độ sâu crawl (default: 2)
+                        Crawl depth (default: 2)
   --max-pages MAX_PAGES
-                        Số trang tối đa crawl (default: 50)
-  --no-banner           Ẩn banner
-  --list-plugins        Liệt kê tất cả plugins
+                        Max pages to crawl (default: 50)
+  --no-banner           Skip banner display
+  --list-plugins        List all available plugins
 ```
 
-### Ví dụ
+### Examples
 
 ```bash
-# Scan nhanh, chỉ lấy thông tin cơ bản
+# Quick info scan
 python -m webscanner example.com -m quick
 
-# Scan đầy đủ, xuất HTML + JSON + CSV
+# Full scan with all report formats
 python -m webscanner https://example.com -m standard -r all
 
-# Scan sâu với crawl
+# Deep scan with crawl
 python -m webscanner https://example.com -m deep --crawl-depth 3 --max-pages 100
 
-# Scan enterprise, chỉ xuất JSON
+# Enterprise scan, JSON only
 python -m webscanner https://example.com -m enterprise --threads 50 -r json
 
-# Xem danh sách module
+# List all available modules
 python -m webscanner --list-plugins
 ```
 
-### Test với app mẫu
+### Testing with Vulnerable App
 
 ```bash
-# Terminal 1: Khởi động app mẫu có lỗ hổng
+# Terminal 1: Start the vulnerable test app
 cd C:\Users\HANH
 $env:PYTHONPATH = "C:\Users\HANH"
 python -m webscanner.samples.vulnerable_app
 
-# Terminal 2: Scan
+# Terminal 2: Scan it
 python -m webscanner http://127.0.0.1:5000 -m standard -r all
 ```
 
 ---
 
-## Kiến trúc
+## Architecture
 
 ```
                      ┌─────────────┐
@@ -293,9 +302,9 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
 
 ---
 
-## Kết quả mẫu
+## Sample Output
 
-### Dashboard CLI
+### CLI Dashboard
 
 ```
 ============================================================
@@ -329,13 +338,12 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
 
 ### HTML Report
 
-Giao diện dark mode, hiển thị:
-
-- Score với màu sắc theo mức độ
-- Summary cards (Critical / High / Medium / Low / Info)
-- Technology Stack tags
-- Findings list theo severity với CVE/CWE badges
-- Recommendations chi tiết
+Dark-themed report with:
+- Color-coded security score
+- Summary cards (Critical / High / Medium / Low / Info counts)
+- Technology Stack badges
+- Findings grouped by severity with CVE/CWE references
+- Detailed recommendations
 
 ### JSON Report
 
@@ -360,16 +368,37 @@ Giao diện dark mode, hiển thị:
 
 ---
 
+## Supported Technologies (CVE Database)
+
+| Technology | Entries | Technology | Entries |
+|------------|---------|------------|---------|
+| WordPress | 10 | Drupal | 4 |
+| Laravel | 10 | Magento | 3 |
+| Python | 10 | ASP.NET | 3 |
+| PHP | 9 | Django | 5 |
+| Nginx | 8 | Flask | 4 |
+| Apache | 7 | Express | 4 |
+| MySQL | 4 | Spring | 4 |
+| PostgreSQL | 4 | Symfony | 3 |
+| Redis | 4 | jQuery | 6 |
+
+---
+
+## Requirements
+
+- `httpx` — Async HTTP client
+- Python 3.10+ standard library (`asyncio`, `ssl`, `socket`, `re`, `json`, `csv`)
+
+No heavy dependencies. No browser engine needed.
+
+---
+
 ## License
 
 MIT License
 
 ---
 
-## Tác giả
-
-Built with Python + asyncio + httpx
-
 <p align="center">
-  <i>WebSec Scanner — Bảo vệ website của bạn trước khi hacker làm điều đó</i>
+  <i>WebSec Scanner — Find vulnerabilities before hackers do</i>
 </p>
