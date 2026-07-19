@@ -86,19 +86,9 @@ IDOR       → CWE-639
 CORS       → CWE-942
 ```
 
-### 📊 Scoring System
-
-| Score | Level | Meaning |
-|-------|-------|---------|
-| 90–100 | 🟢 Very Safe | Excellent security posture |
-| 75–89 | 🟡 Safe | Good, minor improvements needed |
-| 50–74 | 🟠 Needs Improvement | Several issues found |
-| 25–49 | 🔴 Risky | High risk, action required |
-| 0–24 | ⚫ Critical Danger | Immediate action needed |
-
 ### 📄 Multi-Format Reports
 
-- **HTML** — Dark mode UI with score visualization and severity-grouped findings
+- **HTML** — Dark mode UI with severity-summary cards and grouped findings
 - **JSON** — Machine-readable with full metadata
 - **CSV** — Excel-friendly for filtering and analysis
 
@@ -156,9 +146,9 @@ webscanner/
 ├── core/
 │   ├── scanner.py          # Scanner engine
 │   └── plugin_system.py    # Plugin registry + auto-discovery
-├── models/
-│   ├── target.py           # ScanTarget dataclass
-│   └── result.py           # Finding + ScanResult (auto-scoring)
+  ├── models/
+  │   ├── target.py           # ScanTarget dataclass
+  │   └── result.py           # Finding + ScanResult dataclasses
 ├── modules/
 │   ├── recon/              # 8 recon modules
 │   │   ├── whois.py, dns_enum.py, subdomain.py, port_scan.py
@@ -293,11 +283,11 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
                             │
           ┌─────────────────┼─────────────────┐
           │                 │                  │
-    ┌─────▼─────┐    ┌─────▼─────┐    ┌──────▼──────┐
-    │ Dashboard │    │  Report   │    │   Scoring   │
-    │  (CLI)    │    │HTML/JSON/ │    │   System    │
-    └───────────┘    │    CSV    │    └─────────────┘
-                     └───────────┘
+     ┌─────▼─────┐    ┌─────▼─────┐
+     │ Dashboard │    │  Report   │
+     │  (CLI)    │    │HTML/JSON/ │
+     └───────────┘    │    CSV    │
+                      └───────────┘
 ```
 
 ---
@@ -312,34 +302,28 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
   Duration: 4.23s
 ============================================================
 
-  Security Score: [--] 0/100 - Critical Danger
-
-  [CRITICAL] 3 finding(s)
-  [HIGH    ] 8 finding(s)
-  [MEDIUM  ] 5 finding(s)
-  [LOW     ] 4 finding(s)
-  [INFO    ] 7 finding(s)
-
   Technology: Python, Flask
   Open Ports: 5000
   Pages Crawled: 5
   Endpoints Found: 12
 
 ============================================================
+  DETAILED FINDINGS
+============================================================
 
   [CRITICAL - 3]
   --------------------------------------------------------
-  1. CVE-2024-9287 - Heap Overflow in SSL/TLS
+  1. [Potential] CVE-2024-9287 - Heap Overflow in SSL/TLS
      Desc: [Python] CVE-2024-9287: Heap Overflow in SSL/TLS...
-     Evidence: Detected: Python | CVE: CVE-2024-9287 | CVSS: 9.8
+     Evidence: Detected: Python (version unknown - potential only)
      Fix: Update Python to a version newer than 3.13.0
      CVE: CVE-2024-9287 | CWE: CWE-1104 | CVSS: 9.8
+     Confidence: low
 ```
 
 ### HTML Report
 
 Dark-themed report with:
-- Color-coded security score
 - Summary cards (Critical / High / Medium / Low / Info counts)
 - Technology Stack badges
 - Findings grouped by severity with CVE/CWE references
@@ -350,17 +334,15 @@ Dark-themed report with:
 ```json
 {
   "target": "https://example.com",
-  "security_score": 42,
-  "risk_level": "dangerous",
-  "critical": 2,
+  "critical": 0,
+  "high": 1,
   "findings": [
     {
-      "type": "specific_cve_python",
-      "name": "CVE-2024-9287 - Heap Overflow...",
-      "severity": "critical",
-      "cve_id": "CVE-2024-9287",
-      "cwe_id": "CWE-1104",
-      "cvss": 9.8
+      "type": "header_content-security-policy_missing",
+      "name": "Content Security Policy (CSP) - Missing",
+      "severity": "medium",
+      "cwe_id": "CWE-693",
+      "confidence": "medium"
     }
   ]
 }
