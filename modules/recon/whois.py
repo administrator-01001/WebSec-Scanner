@@ -12,6 +12,7 @@ class WhoisPlugin(ReconPlugin):
 
         try:
             import asyncio
+            import sys
             proc = await asyncio.create_subprocess_exec(
                 "whois", domain,
                 stdout=asyncio.subprocess.PIPE,
@@ -22,20 +23,10 @@ class WhoisPlugin(ReconPlugin):
             except (asyncio.TimeoutError, Exception):
                 try:
                     proc.kill()
+                    await proc.wait()
                 except Exception:
                     pass
                 raise
-            finally:
-                try:
-                    if proc.stdout and not proc.stdout.at_eof():
-                        proc.stdout.close()
-                except Exception:
-                    pass
-                try:
-                    if proc.stderr and not proc.stderr.at_eof():
-                        proc.stderr.close()
-                except Exception:
-                    pass
 
             if stdout:
                 output = stdout.decode("utf-8", errors="ignore")

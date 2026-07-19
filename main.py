@@ -1,6 +1,7 @@
 import sys
 import argparse
 import asyncio
+import warnings
 from webscanner.core.scanner import Scanner
 from webscanner.core.plugin_system import PluginRegistry
 
@@ -92,6 +93,7 @@ async def main():
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore", message="I/O operation on closed pipe")
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
