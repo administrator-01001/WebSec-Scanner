@@ -1,4 +1,6 @@
+import asyncio
 import socket
+import subprocess
 from webscanner.modules.recon.base import ReconPlugin
 from webscanner.core.plugin_system import plugin
 from webscanner.models.result import Finding
@@ -33,18 +35,18 @@ class DNSEnumPlugin(ReconPlugin):
             ))
             return findings
 
+        def _run_nslookup(rtype: str, domain: str) -> str:
+            result = subprocess.run(
+                ["nslookup", "-type=" + rtype, domain],
+                capture_output=True, timeout=10, text=True
+            )
+            return result.stdout
+
         record_types = ["MX", "NS", "TXT", "SOA"]
         for rtype in record_types:
             try:
-                import asyncio
-                proc = await asyncio.create_subprocess_exec(
-                    "nslookup", "-type=" + rtype, domain,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=10)
-                if stdout:
-                    output = stdout.decode("utf-8", errors="ignore")
+                output = await asyncio.to_thread(_run_nslookup, rtype, domain)
+                if output:
                     lines = [l.strip() for l in output.splitlines() if l.strip() and domain in l.lower()]
                     if lines:
                         findings.append(Finding(
@@ -56,7 +58,7 @@ class DNSEnumPlugin(ReconPlugin):
                             module="dns_enum",
                             url=target.url,
                         ))
-            except (FileNotFoundError, asyncio.TimeoutError):
+            except (FileNotFoundError, subprocess.TimeoutExpired):
                 try:
                     import dns.resolver
                     answers = dns.resolver.resolve(domain, rtype)
@@ -74,15 +76,8 @@ class DNSEnumPlugin(ReconPlugin):
                     pass
 
         try:
-            proc = await asyncio.create_subprocess_exec(
-                "nslookup", "-type=ANY", domain,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-            )
-            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=10)
-
-            if stdout:
-                output = stdout.decode("utf-8", errors="ignore")
+            output = await asyncio.to_thread(_run_nslookup, "ANY", domain)
+            if output:
                 lines = [l.strip() for l in output.splitlines() if l.strip() and "canonical name" in l.lower()]
                 for line in lines:
                     findings.append(Finding(
@@ -93,7 +88,7 @@ class DNSEnumPlugin(ReconPlugin):
                         module="dns_enum",
                         url=target.url,
                     ))
-        except (FileNotFoundError, asyncio.TimeoutError):
+        except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
 
         try:
