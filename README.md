@@ -1,19 +1,12 @@
-# WebSec Scanner 🔍
+# WebSec Scanner 
 
 **Web Vulnerability Scanner & Security Analyzer** — A comprehensive web security scanning tool with multiple scan modes, specific CVE/CWE detection, and professional report generation.
-
-```
-+--------------------------------------------------------------+
-|                    WebSec Scanner v1.0                        |
-|         Web Vulnerability Scanner & Security Analyzer         |
-+--------------------------------------------------------------+
-```
 
 ---
 
 ## Features
 
-### 🚀 4 Scan Modes
+### 4 Scan Modes
 
 | Mode | Description | Speed |
 |------|-------------|-------|
@@ -22,7 +15,7 @@
 | **Deep** | Full crawl, endpoint fuzzing, API discovery, NVD CVE lookup | ~30-120s |
 | **Enterprise** | All modules, multi-threaded (20 threads), detailed reporting | ~60-180s |
 
-### 📦 Detection Modules (22+ plugins)
+### Detection Modules (22+ plugins)
 
 **Recon (8 modules)**
 - WHOIS lookup, DNS Enumeration (A, MX, NS, TXT, SOA, PTR, CNAME)
@@ -61,38 +54,13 @@
 - Hidden Endpoint Detection
 - HTTP Method Discovery (GET, POST, PUT, DELETE, OPTIONS)
 
-### 🏷️ Specific CVE/CWE Detection
-
-When a technology is detected, the tool automatically cross-references known CVEs:
-
-```
-[Python] CVE-2024-9287 - Heap Overflow in SSL/TLS (Critical, 9.8)
-[Python] CVE-2023-27043 - RCE via email module (Critical, 9.8)
-[Laravel] CVE-2021-3129 - RCE via Ignition (Critical, 9.8)
-[WordPress] CVE-2025-2731 - RCE via XML-RPC (Critical, 9.8)
-```
-
-Each vulnerability type is mapped to its CWE identifier:
-```
-SQLi       → CWE-89
-XSS        → CWE-79
-CSRF       → CWE-352
-SSRF       → CWE-918
-LFI        → CWE-98
-CMDi       → CWE-78
-SSTI       → CWE-1336
-Open Redirect → CWE-601
-IDOR       → CWE-639
-CORS       → CWE-942
-```
-
-### 📄 Multi-Format Reports
+### Multi-Format Reports
 
 - **HTML** — Dark mode UI with severity-summary cards and grouped findings
 - **JSON** — Machine-readable with full metadata
 - **CSV** — Excel-friendly for filtering and analysis
 
-### 🔌 Plugin Architecture
+### Plugin Architecture
 
 Add new modules without modifying the core:
 
@@ -104,7 +72,7 @@ class MyPlugin(VulnPlugin):
         pass
 ```
 
-### ✅ Safe Verification
+### Safe Verification
 
 The tool uses **non-intrusive** detection techniques:
 - Error-based detection (analyzing response patterns)
@@ -250,102 +218,6 @@ python -m webscanner.samples.vulnerable_app
 
 # Terminal 2: Scan it
 python -m webscanner http://127.0.0.1:5000 -m standard -r all
-```
-
----
-
-## Architecture
-
-```
-                     ┌─────────────┐
-                     │    CLI      │
-                     │  (main.py)  │
-                     └──────┬──────┘
-                            │
-                     ┌──────▼──────┐
-                     │   Scanner   │
-                     │   Engine    │
-                     └──────┬──────┘
-                            │
-          ┌─────────────────┼─────────────────┐
-          │                 │                  │
-    ┌─────▼─────┐    ┌─────▼─────┐    ┌──────▼──────┐
-    │   Recon   │    │  Vuln     │    │CVE/Crawl    │
-    │  Modules  │    │  Modules  │    │  Modules    │
-    └─────┬─────┘    └─────┬─────┘    └──────┬──────┘
-          │                 │                  │
-          └─────────────────┼──────────────────┘
-                            │
-                     ┌──────▼──────┐
-                     │   Results   │
-                     │ (Findings)  │
-                     └──────┬──────┘
-                            │
-          ┌─────────────────┼─────────────────┐
-          │                 │                  │
-     ┌─────▼─────┐    ┌─────▼─────┐
-     │ Dashboard │    │  Report   │
-     │  (CLI)    │    │HTML/JSON/ │
-     └───────────┘    │    CSV    │
-                      └───────────┘
-```
-
----
-
-## Sample Output
-
-### CLI Dashboard
-
-```
-============================================================
-  Scan Complete!
-  Duration: 4.23s
-============================================================
-
-  Technology: Python, Flask
-  Open Ports: 5000
-  Pages Crawled: 5
-  Endpoints Found: 12
-
-============================================================
-  DETAILED FINDINGS
-============================================================
-
-  [CRITICAL - 3]
-  --------------------------------------------------------
-  1. [Potential] CVE-2024-9287 - Heap Overflow in SSL/TLS
-     Desc: [Python] CVE-2024-9287: Heap Overflow in SSL/TLS...
-     Evidence: Detected: Python (version unknown - potential only)
-     Fix: Update Python to a version newer than 3.13.0
-     CVE: CVE-2024-9287 | CWE: CWE-1104 | CVSS: 9.8
-     Confidence: low
-```
-
-### HTML Report
-
-Dark-themed report with:
-- Summary cards (Critical / High / Medium / Low / Info counts)
-- Technology Stack badges
-- Findings grouped by severity with CVE/CWE references
-- Detailed recommendations
-
-### JSON Report
-
-```json
-{
-  "target": "https://example.com",
-  "critical": 0,
-  "high": 1,
-  "findings": [
-    {
-      "type": "header_content-security-policy_missing",
-      "name": "Content Security Policy (CSP) - Missing",
-      "severity": "medium",
-      "cwe_id": "CWE-693",
-      "confidence": "medium"
-    }
-  ]
-}
 ```
 
 ---
