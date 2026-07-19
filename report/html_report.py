@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 from webscanner.report.base import ReportGenerator
-from webscanner.utils.scoring import risk_level, risk_emoji
 
 
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -18,8 +17,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .header h1 {{ font-size: 28px; color: #58a6ff; margin-bottom: 8px; }}
   .header .meta {{ color: #8b949e; font-size: 14px; }}
   .score-box {{ display: inline-block; padding: 20px; border-radius: 12px; text-align: center; margin: 16px 0; min-width: 200px; }}
-  .score-box .score {{ font-size: 48px; font-weight: bold; }}
-  .score-box .label {{ font-size: 16px; margin-top: 8px; }}
+  .score-box .score {{ font-size: 24px; font-weight: bold; color: #8b949e; }}
+  .score-box .label {{ font-size: 14px; margin-top: 4px; color: #8b949e; }}
   .summary-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }}
   .summary-card {{ background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; }}
   .summary-card .number {{ font-size: 32px; font-weight: bold; }}
@@ -48,10 +47,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <h1>Web Security Scan Report</h1>
     <div class="meta">Target: {target} | Mode: {mode} | Date: {date}</div>
     <div class="meta">Duration: {duration}s | Pages Crawled: {pages}</div>
-    <div class="score-box" style="background: {bg_color};">
-      <div class="score">{score}</div>
-      <div class="label">/ 100 - {risk_label}</div>
-      <div style="font-size: 32px; margin-top: 8px;">{risk_emoji}</div>
+    <div class="score-box" style="background: #1a1d29;">
+      <div class="score">--</div>
+      <div class="label">Security Score Disabled</div>
     </div>
   </div>
 
@@ -98,21 +96,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 class HTMLReport(ReportGenerator):
     def generate(self, result: ScanResult, output_path: str = ""):
-        score = result.security_score
-        label = risk_level(score)
-        emoji = risk_emoji(score)
-
-        if score >= 90:
-            bg = "#1a3a2a"
-        elif score >= 75:
-            bg = "#3a3a1a"
-        elif score >= 50:
-            bg = "#3a2a1a"
-        elif score >= 25:
-            bg = "#3a1a1a"
-        else:
-            bg = "#1a1a1a"
-
         tech_html = ""
         if result.tech_stack:
             tags = "".join(f'<span class="tech-tag">{t}</span>' for t in result.tech_stack)
@@ -152,10 +135,6 @@ class HTMLReport(ReportGenerator):
             date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             duration=f"{result.scan_duration:.2f}",
             pages=result.pages_crawled,
-            score=score,
-            risk_label=label,
-            risk_emoji=emoji,
-            bg_color=bg,
             critical=result.critical_count,
             high=result.high_count,
             medium=result.medium_count,

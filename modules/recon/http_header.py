@@ -23,57 +23,6 @@ class HTTPHeaderPlugin(ReconPlugin):
             )
             findings.append(info)
 
-            security_checks = {
-                "strict-transport-security": {
-                    "name": "Missing HSTS Header",
-                    "severity": "medium",
-                    "desc": "HTTP Strict Transport Security header is missing",
-                    "rec": "Add Strict-Transport-Security header with a minimum age of 31536000s",
-                },
-                "content-security-policy": {
-                    "name": "Missing CSP Header",
-                    "severity": "high",
-                    "desc": "Content Security Policy header is missing - vulnerable to XSS",
-                    "rec": "Implement CSP header to control resource loading",
-                },
-                "x-content-type-options": {
-                    "name": "Missing X-Content-Type-Options Header",
-                    "severity": "medium",
-                    "desc": "X-Content-Type-Options: nosniff header is missing",
-                    "rec": "Add X-Content-Type-Options: nosniff header",
-                },
-                "x-frame-options": {
-                    "name": "Missing X-Frame-Options Header",
-                    "severity": "medium",
-                    "desc": "X-Frame-Options header is missing - vulnerable to clickjacking",
-                    "rec": "Add X-Frame-Options: DENY or SAMEORIGIN header",
-                },
-                "referrer-policy": {
-                    "name": "Missing Referrer-Policy Header",
-                    "severity": "low",
-                    "desc": "Referrer-Policy header is missing",
-                    "rec": "Add Referrer-Policy: strict-origin-when-cross-origin",
-                },
-                "permissions-policy": {
-                    "name": "Missing Permissions-Policy Header",
-                    "severity": "low",
-                    "desc": "Permissions-Policy header is missing",
-                    "rec": "Add Permissions-Policy header to restrict feature access",
-                },
-            }
-
-            for hdr, check in security_checks.items():
-                if hdr not in headers:
-                    findings.append(Finding(
-                        type="missing_header",
-                        name=check["name"],
-                        severity=check["severity"],
-                        description=check["desc"],
-                        recommendation=check["rec"],
-                        module="http_header",
-                        url=target.url,
-                    ))
-
             if "x-powered-by" in headers:
                 findings.append(Finding(
                     type="info_disclosure",

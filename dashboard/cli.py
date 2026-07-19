@@ -1,6 +1,5 @@
 import time
 import shutil
-from webscanner.utils.scoring import risk_level, risk_emoji
 
 
 class Dashboard:
@@ -56,13 +55,6 @@ class Dashboard:
         print(f"  Scan Complete!")
         print(f"  Duration: {duration:.2f}s")
         print(f"{'='*60}\n")
-
-        score = result.security_score
-        emoji = risk_emoji(score)
-        level = risk_level(score)
-
-        print(f"  Security Score: {emoji} {score}/100 - {level}")
-        print()
 
         sev_data = result.group_by_severity()
         for severity, findings in sev_data.items():

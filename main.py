@@ -90,13 +90,6 @@ async def main():
     for fmt, path in report_paths.items():
         print(f"  [{fmt.upper()}] Report saved: {path}")
 
-    print(f"\n  Scan Summary:")
-    print(f"  Target: {result.target}")
-    print(f"  Score:  {result.security_score}/100")
-    from webscanner.utils.scoring import risk_level as risk_desc
-    print(f"  Risk:   {risk_desc(result.security_score)} ({result.risk_level})")
-    print()
-
 
 if __name__ == "__main__":
     try:

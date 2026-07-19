@@ -67,34 +67,17 @@ class ScanResult:
 
     @property
     def security_score(self) -> int:
-        if not self.findings:
-            return 100
-        weights = {"critical": 25, "high": 15, "medium": 8, "low": 3, "info": 0}
-        counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
-        for f in self.findings:
-            sev = f.severity if f.severity in counts else "info"
-            counts[sev] += 1
-        total_penalty = 0
-        for sev, count in counts.items():
-            w = weights[sev]
-            for i in range(count):
-                total_penalty += w / (1 + i * 0.5)
-        score = max(10, 100 - total_penalty)
-        return int(score)
+        return 0
 
     @property
     def risk_level(self) -> str:
-        score = self.security_score
-        if score >= 90:
-            return "very_safe"
-        elif score >= 75:
-            return "safe"
-        elif score >= 50:
-            return "moderate"
-        elif score >= 25:
-            return "dangerous"
-        else:
+        if self.critical_count > 0:
             return "critical"
+        if self.high_count > 0:
+            return "dangerous"
+        if self.medium_count > 0:
+            return "moderate"
+        return "safe"
 
     def group_by_severity(self) -> dict:
         groups = {"critical": [], "high": [], "medium": [], "low": [], "info": []}
