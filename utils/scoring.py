@@ -12,39 +12,19 @@ SECURITY_HEADERS = {
 
 
 def calculate_score(findings: list, headers: dict) -> int:
-    base = 100
-    deduct_critical = 0
-    deduct_high = 0
-    deduct_medium = 0
-    deduct_low = 0
-
-    for finding in findings:
-        sev = finding.get("severity", "low")
-        if sev == "critical":
-            deduct_critical += 1
-        elif sev == "high":
-            deduct_high += 1
-        elif sev == "medium":
-            deduct_medium += 1
-        elif sev == "low":
-            deduct_low += 1
-
-    penalty = (
-        deduct_critical * 25
-        + deduct_high * 15
-        + deduct_medium * 8
-        + deduct_low * 3
-    )
-
-    header_score = 0
-    hkeys = {k.lower(): v for k, v in headers.items()}
-    for hdr, info in SECURITY_HEADERS.items():
-        if hdr in hkeys:
-            header_score += info["weight"]
-    bonus = min(header_score, 15)
-
-    score = min(100, max(0, base - penalty + bonus))
-    return score
+    weights = {"critical": 25, "high": 15, "medium": 8, "low": 3, "info": 0}
+    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
+    for f in findings:
+        sev = f.get("severity", "low") if isinstance(f, dict) else f.severity
+        if sev in counts:
+            counts[sev] += 1
+    total_penalty = 0
+    for sev, count in counts.items():
+        w = weights[sev]
+        for i in range(count):
+            total_penalty += w / (1 + i * 0.5)
+    score = max(10, 100 - total_penalty)
+    return int(score)
 
 
 def risk_level(score: int) -> str:
@@ -52,9 +32,9 @@ def risk_level(score: int) -> str:
         return "Very Safe"
     elif score >= 75:
         return "Safe"
-    elif score >= 50:
+    elif score >= 55:
         return "Needs Improvement"
-    elif score >= 25:
+    elif score >= 35:
         return "Risky"
     else:
         return "Critical Danger"
@@ -65,9 +45,9 @@ def risk_emoji(score: int) -> str:
         return "[++]"
     elif score >= 75:
         return "[+]"
-    elif score >= 50:
+    elif score >= 55:
         return "[o]"
-    elif score >= 25:
+    elif score >= 35:
         return "[-]"
     else:
         return "[--]"

@@ -69,14 +69,18 @@ class ScanResult:
     def security_score(self) -> int:
         if not self.findings:
             return 100
-        max_penalty = 100
-        total_penalty = 0
+        weights = {"critical": 25, "high": 15, "medium": 8, "low": 3, "info": 0}
+        counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
         for f in self.findings:
-            sev = f.severity
-            weight = {"critical": 25, "high": 15, "medium": 8, "low": 3, "info": 1}
-            total_penalty += weight.get(sev, 1)
-        score = max(0, max_penalty - total_penalty)
-        return min(100, score)
+            sev = f.severity if f.severity in counts else "info"
+            counts[sev] += 1
+        total_penalty = 0
+        for sev, count in counts.items():
+            w = weights[sev]
+            for i in range(count):
+                total_penalty += w / (1 + i * 0.5)
+        score = max(10, 100 - total_penalty)
+        return int(score)
 
     @property
     def risk_level(self) -> str:
