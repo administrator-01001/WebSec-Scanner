@@ -1,0 +1,19 @@
+Severity,Name,Type,Description,URL,CVE ID,CWE ID,CVSS,Confidence,Exploit Available,Recommendation,Evidence
+info,WHOIS Not Available,whois_unavailable,WHOIS command not found or timed out,https://fram.co.za/,,,,medium,No,,
+info,DNS A Record,dns_info,fram.co.za resolves to 197.245.249.122,https://fram.co.za/,,,,medium,No,,197.245.249.122
+info,DNS MX Record,dns_record,Found 2 MX record(s),https://fram.co.za/,,,,medium,No,,"fram.co.za	MX preference = 20, mail exchanger = mx-02-eu-west-1.prod.hydra.sophos.com
+fram.co.za	MX preference = 10, mail exchanger = mx-01-eu-west-1.prod.hydra.sophos.com"
+info,DNS NS Record,dns_record,Found 4 NS record(s),https://fram.co.za/,,,,medium,No,,"fram.co.za	nameserver = ns2.dns-h.com
+fram.co.za	nameserver = ns1.host-h.net
+fram.co.za	nameserver = ns1.dns-h.com
+fram.co.za	nameserver = ns2.host-h.net"
+info,DNS TXT Record,dns_record,Found 3 TXT record(s),https://fram.co.za/,,,,medium,No,,"fram.co.za	text =
+fram.co.za	text =
+fram.co.za	text ="
+info,DNS SOA Record,dns_record,Found 2 SOA record(s),https://fram.co.za/,,,,medium,No,,"fram.co.za
+responsible mail addr = postmaster.fram.co.za"
+info,DNS Reverse Lookup (PTR),dns_ptr,Reverse DNS: gwia-gud2.gud.co.za,https://fram.co.za/,,,,medium,No,,
+info,HTTP Header Scan Failed,error,Could not retrieve headers from https://fram.co.za/,https://fram.co.za/,,,,medium,No,,
+info,Plugin Error: ssl_tls,plugin_error,Error running recon/ssl_tls: 'TransportSocket' object has no attribute 'detach',https://fram.co.za/,,,,medium,No,,
+info,WAF Detection Failed,error,"WAF detection error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'fram.co.za'. (_ssl.c:1081)",https://fram.co.za/,,,,medium,No,,
+info,Tech Detection Failed,error,Could not detect technologies for https://fram.co.za/,https://fram.co.za/,,,,medium,No,,

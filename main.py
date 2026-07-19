@@ -1,0 +1,102 @@
+import sys
+import argparse
+import asyncio
+from webscanner.core.scanner import Scanner
+from webscanner.core.plugin_system import PluginRegistry
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(
+        prog="webscanner",
+        description="WebSec Scanner - Web Vulnerability Scanner & Security Analyzer",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  webscanner example.com
+  webscanner https://example.com -m deep
+  webscanner https://example.com -m enterprise --threads 30
+  webscanner https://example.com -m quick --report json
+  webscanner https://example.com -m standard --proxy http://127.0.0.1:8080
+  webscanner --list-plugins
+        """,
+    )
+
+    parser.add_argument("target", nargs="*", help="Target URL or domain to scan")
+    parser.add_argument("-m", "--mode", choices=["quick", "standard", "deep", "enterprise"], default="quick", help="Scan mode (default: quick)")
+    parser.add_argument("-t", "--threads", type=int, default=0, help="Number of threads (0 = mode default)")
+    parser.add_argument("-p", "--proxy", default="", help="Proxy server (e.g., http://127.0.0.1:8080)")
+    parser.add_argument("-r", "--report", choices=["html", "json", "csv", "all"], default="html", help="Report format (default: html)")
+    parser.add_argument("--crawl-depth", type=int, default=2, help="Crawl depth (default: 2)")
+    parser.add_argument("--max-pages", type=int, default=50, help="Max pages to crawl (default: 50)")
+    parser.add_argument("--no-banner", action="store_true", help="Skip banner display")
+    parser.add_argument("--list-plugins", action="store_true", help="List all available plugins")
+
+    return parser
+
+
+def list_plugins():
+    PluginRegistry.discover_plugins()
+    print("\nAvailable Plugins:")
+    print("=" * 60)
+    for category in ["recon", "vuln", "cve", "crawl"]:
+        plugins = PluginRegistry.list_plugins(category)
+        if plugins:
+            print(f"\n  [{category.upper()}]")
+            for name in plugins:
+                plugin_cls = PluginRegistry.get_plugin(name, category)
+                desc = getattr(plugin_cls, "description", "") if plugin_cls else ""
+                print(f"    - {name}: {desc}")
+    print()
+
+
+async def main():
+    parser = create_parser()
+    args = parser.parse_args()
+
+    if args.list_plugins:
+        PluginRegistry.discover_plugins()
+        list_plugins()
+        return
+
+    if not args.target:
+        parser.print_help()
+        sys.exit(1)
+
+    PluginRegistry.discover_plugins()
+    target_url = " ".join(args.target)
+
+    scanner = Scanner(
+        target=target_url,
+        mode=args.mode,
+        threads=args.threads,
+        proxy=args.proxy,
+    )
+
+    if args.crawl_depth:
+        scanner.target.crawl_depth = args.crawl_depth
+    if args.max_pages:
+        scanner.target.max_pages = args.max_pages
+
+    result = await scanner.run()
+
+    scanner.show_detailed_findings()
+
+    if args.report == "all":
+        formats = ["html", "json", "csv"]
+    else:
+        formats = [args.report]
+
+    report_paths = await scanner.generate_reports(formats)
+    for fmt, path in report_paths.items():
+        print(f"  [{fmt.upper()}] Report saved: {path}")
+
+    print(f"\n  Scan Summary:")
+    print(f"  Target: {result.target}")
+    print(f"  Score:  {result.security_score}/100")
+    from webscanner.utils.scoring import risk_level as risk_desc
+    print(f"  Risk:   {risk_desc(result.security_score)} ({result.risk_level})")
+    print()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
