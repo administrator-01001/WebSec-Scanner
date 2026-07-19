@@ -41,13 +41,14 @@ class Scanner:
         self.dashboard.show_scan_start(self.target.url, self.mode)
         self.result.started_at = datetime.now().isoformat()
 
-        await self._run_recon()
-        await self._run_vuln()
-        await self._run_crawl()
-        await self._run_cve()
-
-        self.result.finished_at = datetime.now().isoformat()
-        await self.http_client.close()
+        try:
+            await self._run_recon()
+            await self._run_vuln()
+            await self._run_crawl()
+            await self._run_cve()
+        finally:
+            self.result.finished_at = datetime.now().isoformat()
+            await self.http_client.close()
 
         self.dashboard.show_scan_summary(self.result)
 
