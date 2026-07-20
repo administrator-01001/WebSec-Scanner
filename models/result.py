@@ -21,10 +21,7 @@ class Finding:
     payload: str = ""
     confidence: str = "medium"  # low, medium, high, confirmed
 
-    @property
-    def severity_score(self) -> float:
-        scores = {"critical": 9.5, "high": 7.5, "medium": 5.0, "low": 2.5, "info": 0.5}
-        return max(scores.get(self.severity, 1.0), self.cvss or 0)
+
 
 
 @dataclass
@@ -65,20 +62,6 @@ class ScanResult:
     def info_count(self) -> int:
         return sum(1 for f in self.findings if f.severity == "info")
 
-    @property
-    def security_score(self) -> int:
-        return 0
-
-    @property
-    def risk_level(self) -> str:
-        if self.critical_count > 0:
-            return "critical"
-        if self.high_count > 0:
-            return "dangerous"
-        if self.medium_count > 0:
-            return "moderate"
-        return "safe"
-
     def group_by_severity(self) -> dict:
         groups = {"critical": [], "high": [], "medium": [], "low": [], "info": []}
         for f in self.findings:
@@ -93,8 +76,6 @@ class ScanResult:
             "started_at": self.started_at,
             "finished_at": self.finished_at,
             "scan_duration": self.scan_duration,
-            "security_score": self.security_score,
-            "risk_level": self.risk_level,
             "total_findings": self.total_findings,
             "critical": self.critical_count,
             "high": self.high_count,

@@ -142,7 +142,7 @@ webscanner/
 ├── report/                 # Report generators
 │   ├── html_report.py, json_report.py, csv_report.py
 ├── utils/                  # Utilities
-│   ├── http_client.py, scoring.py, helpers.py
+│   ├── http_client.py, helpers.py
 ├── samples/
 │   └── vulnerable_app.py   # Test Flask app
 ├── requirements.txt

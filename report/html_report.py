@@ -16,9 +16,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .header {{ background: linear-gradient(135deg, #1a1d29, #0d1117); padding: 40px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #30363d; }}
   .header h1 {{ font-size: 28px; color: #58a6ff; margin-bottom: 8px; }}
   .header .meta {{ color: #8b949e; font-size: 14px; }}
-  .score-box {{ display: inline-block; padding: 20px; border-radius: 12px; text-align: center; margin: 16px 0; min-width: 200px; }}
-  .score-box .score {{ font-size: 24px; font-weight: bold; color: #8b949e; }}
-  .score-box .label {{ font-size: 14px; margin-top: 4px; color: #8b949e; }}
+
   .summary-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }}
   .summary-card {{ background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; }}
   .summary-card .number {{ font-size: 32px; font-weight: bold; }}
@@ -47,10 +45,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <h1>Web Security Scan Report</h1>
     <div class="meta">Target: {target} | Mode: {mode} | Date: {date}</div>
     <div class="meta">Duration: {duration}s | Pages Crawled: {pages}</div>
-    <div class="score-box" style="background: #1a1d29;">
-      <div class="score">--</div>
-      <div class="label">Security Score Disabled</div>
-    </div>
   </div>
 
   <h2>Summary</h2>
