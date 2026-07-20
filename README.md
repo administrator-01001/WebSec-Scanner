@@ -99,7 +99,7 @@ The tool uses **non-intrusive** detection techniques:
 
 ```bash
 # Clone or copy the source
-cd webscanner
+cd WebSec-Scanner
 
 # Install dependencies
 pip install -r requirements.txt
@@ -113,7 +113,7 @@ pip install -r requirements.txt
 ### Project Structure
 
 ```
-webscanner/
+WebSec-Scanner/
 ├── main.py                 # CLI entry point (argparse)
 ├── config.py               # Scan mode configuration
 ├── core/
@@ -161,16 +161,16 @@ cd C:\Users\HANH
 $env:PYTHONPATH = "C:\Users\HANH"
 
 # Quick scan
-python -m webscanner example.com -m quick
+python -m WebSec-Scanner example.com -m quick
 
 # Standard scan with all reports
-python -m webscanner https://example.com -m standard -r all
+python -m WebSec-Scanner https://example.com -m standard -r all
 
 # Deep scan
-python -m webscanner https://example.com -m deep --crawl-depth 3
+python -m WebSec-Scanner https://example.com -m deep --crawl-depth 3
 
 # Enterprise scan with proxy
-python -m webscanner https://example.com -m enterprise -c 30 --proxy http://127.0.0.1:8080
+python -m WebSec-Scanner https://example.com -m enterprise -c 30 --proxy http://127.0.0.1:8080
 ```
 
 ### CLI Options
@@ -203,19 +203,19 @@ options:
 
 ```bash
 # Quick info scan
-python -m webscanner example.com -m quick
+python -m WebSec-Scanner example.com -m quick
 
 # Full scan with all report formats
-python -m webscanner https://example.com -m standard -r all
+python -m WebSec-Scanner https://example.com -m standard -r all
 
 # Deep scan with crawl
-python -m webscanner https://example.com -m deep --crawl-depth 3 --max-pages 100
+python -m WebSec-Scanner https://example.com -m deep --crawl-depth 3 --max-pages 100
 
 # Enterprise scan, JSON only
-python -m webscanner https://example.com -m enterprise -c 50 -r json
+python -m WebSec-Scanner https://example.com -m enterprise -c 50 -r json
 
 # List all available modules
-python -m webscanner --list-plugins
+python -m WebSec-Scanner --list-plugins
 ```
 
 ### Testing with Vulnerable App
@@ -227,7 +227,7 @@ $env:PYTHONPATH = "C:\Users\HANH"
 python -m webscanner.samples.vulnerable_app
 
 # Terminal 2: Scan it
-python -m webscanner http://127.0.0.1:5000 -m standard -r all
+python -m WebSec-Scanner http://127.0.0.1:5000 -m standard -r all
 ```
 
 ---
