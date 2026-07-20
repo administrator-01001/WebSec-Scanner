@@ -11,7 +11,7 @@ class ScanTarget:
     ports: list[int] = field(default_factory=list)
     cookies: dict = field(default_factory=dict)
     headers: dict = field(default_factory=dict)
-    threads: int = 1
+    concurrency: int = 1
     proxy: Optional[str] = None
     crawl_depth: int = 2
     max_pages: int = 50

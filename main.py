@@ -15,9 +15,10 @@ def create_parser():
 Examples:
   webscanner example.com
   webscanner https://example.com -m deep
-  webscanner https://example.com -m enterprise --threads 30
+  webscanner https://example.com -m enterprise -c 30
   webscanner https://example.com -m quick --report json
   webscanner https://example.com -m standard --proxy http://127.0.0.1:8080
+  webscanner https://example.com -m deep --rate-limit 5 -H "Authorization: Bearer xxx"
   webscanner --list-plugins
         """,
     )
@@ -29,6 +30,8 @@ Examples:
     parser.add_argument("-r", "--report", choices=["html", "json", "csv", "all"], default="html", help="Report format (default: html)")
     parser.add_argument("--crawl-depth", type=int, default=2, help="Crawl depth (default: 2)")
     parser.add_argument("--max-pages", type=int, default=50, help="Max pages to crawl (default: 50)")
+    parser.add_argument("--rate-limit", type=float, default=0, help="Max requests per second (0 = unlimited)")
+    parser.add_argument("-H", "--header", action="append", default=[], help="Custom HTTP header (can be used multiple times, e.g. -H 'Authorization: Bearer x' -H 'Cookie: session=abc')")
     parser.add_argument("--no-banner", action="store_true", help="Skip banner display")
     parser.add_argument("--list-plugins", action="store_true", help="List all available plugins")
 
@@ -66,11 +69,19 @@ async def main():
     PluginRegistry.discover_plugins()
     target_url = " ".join(args.target)
 
+    custom_headers = {}
+    for h in args.header:
+        if ":" in h:
+            key, val = h.split(":", 1)
+            custom_headers[key.strip()] = val.strip()
+
     scanner = Scanner(
         target=target_url,
         mode=args.mode,
         concurrency=args.concurrency,
         proxy=args.proxy,
+        custom_headers=custom_headers,
+        rate_limit=args.rate_limit,
     )
 
     if args.crawl_depth:

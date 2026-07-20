@@ -13,7 +13,7 @@ from webscanner.report.csv_report import CSVReport
 
 
 class Scanner:
-    def __init__(self, target: str, mode: str = "quick", concurrency: int = 0, proxy: str = "", cookies: dict = None):
+    def __init__(self, target: str, mode: str = "quick", concurrency: int = 0, proxy: str = "", cookies: dict = None, custom_headers: dict = None, rate_limit: float = 0):
         self.target = ScanTarget(
             url=target,
             mode=mode,
@@ -26,7 +26,7 @@ class Scanner:
 
         mode_config = SCAN_MODES.get(mode, SCAN_MODES["quick"])
         self.concurrency = concurrency if concurrency > 0 else mode_config["concurrency"]
-        self.http_client = HttpClient(proxy=self.target.proxy, cookies=self.target.cookies, concurrency=self.concurrency)
+        self.http_client = HttpClient(proxy=self.target.proxy, cookies=self.target.cookies, concurrency=self.concurrency, custom_headers=custom_headers or {}, rate_limit=rate_limit)
 
         self.recon_modules = mode_config["recon"]
         self.vuln_modules = mode_config["vuln"]

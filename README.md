@@ -192,6 +192,9 @@ options:
                         Crawl depth (default: 2)
   --max-pages MAX_PAGES
                         Max pages to crawl (default: 50)
+  --rate-limit RATE_LIMIT
+                        Max requests per second (default: unlimited)
+  -H, --header HEADER   Custom HTTP header (repeatable, e.g. -H 'Authorization: Bearer x' -H 'Cookie: session=abc')
   --no-banner           Skip banner display
   --list-plugins        List all available plugins
 ```
