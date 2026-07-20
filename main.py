@@ -24,7 +24,7 @@ Examples:
 
     parser.add_argument("target", nargs="*", help="Target URL or domain to scan")
     parser.add_argument("-m", "--mode", choices=["quick", "standard", "deep", "enterprise"], default="quick", help="Scan mode (default: quick)")
-    parser.add_argument("-t", "--threads", type=int, default=0, help="Number of threads (0 = mode default)")
+    parser.add_argument("-c", "--concurrency", type=int, default=0, help="Max concurrent requests (0 = mode default)")
     parser.add_argument("-p", "--proxy", default="", help="Proxy server (e.g., http://127.0.0.1:8080)")
     parser.add_argument("-r", "--report", choices=["html", "json", "csv", "all"], default="html", help="Report format (default: html)")
     parser.add_argument("--crawl-depth", type=int, default=2, help="Crawl depth (default: 2)")
@@ -69,7 +69,7 @@ async def main():
     scanner = Scanner(
         target=target_url,
         mode=args.mode,
-        threads=args.threads,
+        concurrency=args.concurrency,
         proxy=args.proxy,
     )
 

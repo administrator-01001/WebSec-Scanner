@@ -183,8 +183,8 @@ options:
   -h, --help            Show help message
   -m, --mode {quick,standard,deep,enterprise}
                         Scan mode (default: quick)
-  -t, --threads THREADS
-                        Number of threads (0 = mode default)
+  -c, --concurrency CONCURRENCY
+                        Max concurrent requests (0 = mode default)
   -p, --proxy PROXY     Proxy server (e.g., http://127.0.0.1:8080)
   -r, --report {html,json,csv,all}
                         Report format (default: html)

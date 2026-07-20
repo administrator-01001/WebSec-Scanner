@@ -1,53 +1,23 @@
-SECURITY_HEADERS = {
-    "strict-transport-security": {"weight": 8, "name": "HTTP Strict Transport Security (HSTS)"},
-    "content-security-policy": {"weight": 10, "name": "Content Security Policy (CSP)"},
-    "x-content-type-options": {"weight": 5, "name": "X-Content-Type-Options"},
-    "x-frame-options": {"weight": 5, "name": "X-Frame-Options"},
-    "x-xss-protection": {"weight": 3, "name": "X-XSS-Protection"},
-    "referrer-policy": {"weight": 3, "name": "Referrer-Policy"},
-    "permissions-policy": {"weight": 4, "name": "Permissions-Policy"},
-    "set-cookie": {"weight": 3, "name": "Secure/HttpOnly/SameSite Cookie Attributes"},
-    "access-control-allow-origin": {"weight": 3, "name": "CORS Headers"},
-}
+CVSS_SEVERITY = [
+    (0.0, "none"),
+    (0.1, "low"),
+    (4.0, "medium"),
+    (7.0, "high"),
+    (9.0, "critical"),
+]
 
 
-def calculate_score(findings: list, headers: dict) -> int:
-    weights = {"critical": 25, "high": 15, "medium": 8, "low": 3, "info": 0}
-    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
-    for f in findings:
-        sev = f.get("severity", "low") if isinstance(f, dict) else f.severity
-        if sev in counts:
-            counts[sev] += 1
-    total_penalty = 0
-    for sev, count in counts.items():
-        w = weights[sev]
-        for i in range(count):
-            total_penalty += w / (1 + i * 0.5)
-    score = max(10, 100 - total_penalty)
-    return int(score)
+def cvss_severity(cvss: float) -> str:
+    if cvss >= 9.0:
+        return "critical"
+    elif cvss >= 7.0:
+        return "high"
+    elif cvss >= 4.0:
+        return "medium"
+    elif cvss > 0.0:
+        return "low"
+    return "none"
 
 
-def risk_level(score: int) -> str:
-    if score >= 90:
-        return "Very Safe"
-    elif score >= 75:
-        return "Safe"
-    elif score >= 55:
-        return "Needs Improvement"
-    elif score >= 35:
-        return "Risky"
-    else:
-        return "Critical Danger"
-
-
-def risk_emoji(score: int) -> str:
-    if score >= 90:
-        return "[++]"
-    elif score >= 75:
-        return "[+]"
-    elif score >= 55:
-        return "[o]"
-    elif score >= 35:
-        return "[-]"
-    else:
-        return "[--]"
+def cvss_score(severity: str) -> float:
+    return {"critical": 9.5, "high": 8.0, "medium": 5.5, "low": 2.0, "none": 0.0}.get(severity, 0.0)
