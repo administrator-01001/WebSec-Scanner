@@ -102,7 +102,7 @@ The tool uses **non-intrusive** detection techniques:
 cd webscanner
 
 # Install dependencies
-pip install httpx
+pip install -r requirements.txt
 
 # (Optional) Install whois for WHOIS lookups
 # Linux: sudo apt install whois
@@ -254,9 +254,8 @@ python -m webscanner http://127.0.0.1:5000 -m standard -r all
 ## Requirements
 
 - `httpx` — Async HTTP client
+- `flask` — for vulnerable app
 - Python 3.10+ standard library (`asyncio`, `ssl`, `socket`, `re`, `json`, `csv`)
-
-No heavy dependencies. No browser engine needed.
 
 ---
 
