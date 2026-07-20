@@ -98,7 +98,8 @@ The tool uses **non-intrusive** detection techniques:
 ### Setup
 
 ```bash
-# Clone or copy the source
+# Clone the project
+git clone https://github.com/administrator-01001/WebSec-Scanner.git
 cd WebSec-Scanner
 
 # Install dependencies
