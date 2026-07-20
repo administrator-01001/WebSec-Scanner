@@ -8,12 +8,12 @@
 
 ### 4 Scan Modes
 
-| Mode | Description | Speed |
-|------|-------------|-------|
-| **Quick** | Basic info gathering: HTTP headers, SSL/TLS, tech detection | ~2-5s |
-| **Standard** | OWASP Top 10, tech-specific CVEs, security config checks | ~5-15s |
-| **Deep** | Full crawl, endpoint fuzzing, API discovery, NVD CVE lookup | ~30-120s |
-| **Enterprise** | All modules, multi-threaded (20 threads), detailed reporting | ~60-180s |
+| Mode | Description | Concurrency | Speed |
+|------|-------------|-------------|-------|
+| **Quick** | Basic info gathering: HTTP headers, SSL/TLS, tech detection | 1 | ~2-5s |
+| **Standard** | OWASP Top 10, XXE, Host Header, NoSQLi, tech CVEs, config checks | 5 | ~5-15s |
+| **Deep** | Full crawl, endpoint fuzzing, API discovery, NVD CVE, GraphQL | 10 | ~30-120s |
+| **Enterprise** | All modules + cert.sh recon, high concurrency, detailed reporting | 20 | ~60-180s |
 
 ### Detection Modules (22+ plugins)
 
@@ -170,7 +170,7 @@ python -m webscanner https://example.com -m standard -r all
 python -m webscanner https://example.com -m deep --crawl-depth 3
 
 # Enterprise scan with proxy
-python -m webscanner https://example.com -m enterprise --threads 30 --proxy http://127.0.0.1:8080
+python -m webscanner https://example.com -m enterprise -c 30 --proxy http://127.0.0.1:8080
 ```
 
 ### CLI Options
@@ -209,7 +209,7 @@ python -m webscanner https://example.com -m standard -r all
 python -m webscanner https://example.com -m deep --crawl-depth 3 --max-pages 100
 
 # Enterprise scan, JSON only
-python -m webscanner https://example.com -m enterprise --threads 50 -r json
+python -m webscanner https://example.com -m enterprise -c 50 -r json
 
 # List all available modules
 python -m webscanner --list-plugins
