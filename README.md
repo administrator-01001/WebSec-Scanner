@@ -100,7 +100,7 @@ The tool uses **non-intrusive** detection techniques:
 ```bash
 # Clone the project
 git clone https://github.com/administrator-01001/WebSec-Scanner.git webscanner
-cd WebSec-Scanner
+cd webscanner
 
 # Install dependencies
 pip install -r requirements.txt
